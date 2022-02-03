@@ -1,15 +1,22 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
-
-func helloWorld(c *fiber.Ctx) error {
-	return c.SendString("Hello world")
-}
+import (
+	"github.com/gofiber/fiber/v2"
+	"github.com/lutungp/julo-test/config"
+	"github.com/lutungp/julo-test/database"
+	"github.com/lutungp/julo-test/router"
+)
 
 func main() {
+	// Start a new fiber app
 	app := fiber.New()
 
-	app.Get("/", helloWorld)
+	// Connect to the Database
+	database.ConnectDB()
 
-	app.Listen(":3000")
+	// Setup the router
+	router.SetupRoutes(app)
+
+	// Listen on PORT 3000
+	app.Listen(config.Config("PORT"))
 }

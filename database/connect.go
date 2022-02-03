@@ -5,7 +5,8 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/percoguru/notes-api-fiber/config"
+	"github.com/lutungp/julo-test/config"
+	"github.com/lutungp/julo-test/internal/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -33,4 +34,9 @@ func ConnectDB() {
 	}
 
 	fmt.Println("Connection Opened to Database")
+
+	// Migrate the database
+	DB.AutoMigrate(&model.Note{})
+	DB.AutoMigrate(&model.Account{})
+	fmt.Println("Database Migrated")
 }
