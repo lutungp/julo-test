@@ -22,11 +22,6 @@ type DataToken struct {
 	Token string `json:"token"`
 }
 
-type SomeStruct struct {
-	Name string
-	Age  uint8
-}
-
 func CreateAccount(c *fiber.Ctx) error {
 	db := database.DB
 	var account model.Account
