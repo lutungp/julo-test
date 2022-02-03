@@ -61,7 +61,6 @@ func CreateAccount(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"status": "failure", "message": "Can't generate token"})
 	}
 
-	fmt.Print(t)
 	res := &ResponseToken{
 		Status: "success",
 		Data: DataToken{
