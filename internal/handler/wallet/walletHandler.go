@@ -85,7 +85,7 @@ func EnableWalletCustomer(c *fiber.Ctx) error {
 	/**
 	 * CEK AVAILABLE WALLET
 	 */
-	db.Find(&wallet, "customer_id = ?", claims.Id)
+	db.Find(&wallet, "status = 'enable' AND customer_id = ?", claims.Id)
 	/**
 	 * JIKA SUDAH ADA
 	 */
@@ -93,16 +93,27 @@ func EnableWalletCustomer(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Customer already has wallet", "data": err})
 	}
 
-	wallet.ID = uuid.New()
-	wallet.CustomerId = claims.Id
-	wallet.Status = "enable"
+	db.Find(&wallet, "customer_id = ?", claims.Id)
 
-	err = db.Create(&wallet).Error
+	message := "Created Wallet"
+	if wallet.ID != uuid.Nil {
+		wallet.CustomerId = claims.Id
+		wallet.Status = "enable"
+
+		err = db.Save(wallet).Error
+		message = "Wallet Activated"
+	} else {
+		wallet.ID = uuid.New()
+		wallet.CustomerId = claims.Id
+		wallet.Status = "enable"
+		err = db.Create(&wallet).Error
+	}
+
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Could not create wallet", "data": err})
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "message": "Created Wallet", "data": wallet})
+	return c.JSON(fiber.Map{"status": "success", "message": message, "data": wallet})
 }
 
 type DisableWalletValidator struct {
