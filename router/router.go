@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	accountRoutes "github.com/lutungp/julo-test/internal/routes/account"
 	noteRoutes "github.com/lutungp/julo-test/internal/routes/note"
+	walletRoute "github.com/lutungp/julo-test/internal/routes/wallet"
 )
 
 func SetupRoutes(app *fiber.App) {
@@ -12,4 +13,5 @@ func SetupRoutes(app *fiber.App) {
 
 	noteRoutes.SetupNoteRoutes(api)
 	accountRoutes.SetupAccountRoutes(api)
+	walletRoute.SetupWalletRoute(api)
 }

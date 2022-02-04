@@ -1,7 +1,6 @@
 package accountHandler
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -23,20 +22,29 @@ type DataToken struct {
 }
 
 func CreateAccount(c *fiber.Ctx) error {
+
+	type newCustomer struct {
+		CustomerXid string `json:"customer_xid"`
+	}
+
+	var newCustomerData newCustomer
+
 	db := database.DB
 	var account model.Account
 
-	err := c.BodyParser(account)
+	err := c.BodyParser(&newCustomerData)
 
-	id := c.Params("customerXid")
+	id := c.FormValue("customer_xid")
 
 	db.Find(&account, "customer_xid = ?", id)
 
 	if account.ID == uuid.Nil {
 		account.ID = uuid.New()
+		account.CustomerXid = c.FormValue("customer_xid")
+
 		err = db.Create(&account).Error
 
-		if err == nil {
+		if err != nil {
 			return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Could not create account", "data": err})
 		}
 	}
@@ -49,7 +57,6 @@ func CreateAccount(c *fiber.Ctx) error {
 
 	// Create token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	fmt.Println(token)
 
 	t, err := token.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
 	if err != nil {

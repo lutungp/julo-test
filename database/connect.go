@@ -38,5 +38,7 @@ func ConnectDB() {
 	// Migrate the database
 	DB.AutoMigrate(&model.Note{})
 	DB.AutoMigrate(&model.Account{})
+	DB.AutoMigrate(&model.Wallet{})
+	DB.AutoMigrate(&model.FillWallet{})
 	fmt.Println("Database Migrated")
 }
